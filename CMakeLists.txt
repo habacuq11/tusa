@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 project(tusa)
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt6 COMPONENTS Widgets Multimedia QUIET)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Multimedia)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
@@ -37,9 +37,7 @@ target_include_directories(tusa PRIVATE
     "${CMAKE_SOURCE_DIR}/src"
 )
 
-if(Qt6_FOUND)
-    target_link_libraries(tusa PRIVATE
-        Qt6::Multimedia
-        Qt6::Widgets
+ target_link_libraries(tusa PRIVATE
+     Qt6::Multimedia
+     Qt6::Widgets
     )
-endif()
