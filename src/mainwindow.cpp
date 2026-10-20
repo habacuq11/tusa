@@ -4,6 +4,8 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QPushButton>
+#include <QSlider>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -34,22 +36,43 @@ MainWindow::MainWindow(QWidget* parent)
         blayout->addWidget(new QLabel("ALBUMS"));
         blayout->addWidget(new QLabel("PLAYLISTS"));
         blayout->addWidget(new QLabel("SPOTIFY"));
-        auto* sectiontitle = new QLabel("MUSIC");
-        auto* tracktitle = new QLabel("No song selected");
-        auto* trackmetadata = new QLabel("Select a track from your library");
+        auto* sectionTitle = new QLabel("MUSIC");
+        auto* trackTitle = new QLabel("No song selected");
+        auto* trackMetadata = new QLabel("Select a track from your library");
         auto* coverContainer = new QWidget;
         auto* coverLayout = new QVBoxLayout(coverContainer);
-        sectiontitle->setObjectName("sectiontitle");
-        tracktitle->setObjectName("tracktitle");
-        trackmetadata->setObjectName("trackmetadata");
-        mplayout->addWidget(sectiontitle);
+        sectionTitle->setObjectName("sectionTitle");
+        trackTitle->setObjectName("trackTitle");
+        trackMetadata->setObjectName("trackMetadata");
+        mplayout->addWidget(sectionTitle);
         mplayout->addWidget(coverContainer);
-        mplayout->addWidget(tracktitle);
-        mplayout->addWidget(trackmetadata);
-        coverContainer->resize(220, 220);
+        mplayout->addWidget(trackTitle);
+        mplayout->addWidget(trackMetadata);
+        coverContainer->setMinimumSize(220, 220);
         playerBar->setMinimumHeight(80);
         auto* playerLayout = new QHBoxLayout(playerBar);
         auto* songInfo = new QLabel("No song selected");
-
+        auto* backButton = new QPushButton("|<");
+        auto* playButton = new QPushButton(">");
+        auto* nextButton = new QPushButton(">|");
+        auto* rTime = new QLabel("0:00 / 0:00");
+        auto* volume = new QLabel("Volume");
+        auto* volumeSlider = new QSlider(Qt::Horizontal);
+        volumeSlider->setRange(0, 100);
+        volumeSlider->setValue(70);
+        playerLayout->addWidget(songInfo);
+        playerLayout->addWidget(backButton);
+        playerLayout->addWidget(playButton);
+        playerLayout->addWidget(nextButton);
+        playerLayout->addWidget(rTime);
+        playerLayout->addWidget(volume);
+        playerLayout->addWidget(volumeSlider);
+        songInfo->setObjectName("songInfo");
+        backButton->setObjectName("backButton");
+        playButton->setObjectName("playButton");
+        nextButton->setObjectName("nextButton");
+        rTime->setObjectName("playbackTime");
+        volume->setObjectName("volumeLabel");
+        volumeSlider->setObjectName("volumeSlider");
     }
 MainWindow::~MainWindow() = default;

@@ -11,6 +11,6 @@ THIS IS STILL IN DEVELOPMENT SO PLEASE BE KIND 😊<img width="1366" height="768
 
 How to run:<br>
 1.Go to releases<br>
-2.Download "tusa v0.1.0.zip"<bro>
+2.Download "tusa v0.1.0.zip"<br>
 3.Unzip it<br>
 4.Run "tusa.exe"<br>
