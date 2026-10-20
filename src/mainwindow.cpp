@@ -60,10 +60,14 @@ MainWindow::MainWindow(QWidget* parent)
         auto* volumeSlider = new QSlider(Qt::Horizontal);
         volumeSlider->setRange(0, 100);
         volumeSlider->setValue(70);
+        auto* reproductionZone = new QWidget;
+        auto* reproductionLayout = new QHBoxLayout(reproductionZone);
         playerLayout->addWidget(songInfo);
-        playerLayout->addWidget(backButton);
-        playerLayout->addWidget(playButton);
-        playerLayout->addWidget(nextButton);
+        playerLayout->addStretch();
+        playerLayout->addWidget(reproductionZone);
+        reproductionLayout->addWidget(backButton);
+        reproductionLayout->addWidget(playButton);
+        reproductionLayout->addWidget(nextButton);
         playerLayout->addWidget(rTime);
         playerLayout->addWidget(volume);
         playerLayout->addWidget(volumeSlider);
