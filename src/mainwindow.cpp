@@ -1,3 +1,8 @@
+//Code 100% write by hand by me (@habacuq11)
+//This is a music player write in C++ with Qt :3
+//some of this comments are temporary and will be removed later, I just put them cause I didn't know what I was doing atp 
+
+//Includes
 #include "mainwindow.h"
 
 #include <QWidget>
@@ -10,73 +15,82 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     {
-        resize(900,600);
-        setWindowTitle("Tusa");
-        auto* container = new QWidget(this);
-        auto* exteriorLayout = new QVBoxLayout;
-        auto* mainlayout = new QHBoxLayout;
-        auto* playerBar = new QWidget;
-        container->setLayout(exteriorLayout);
-        exteriorLayout->addLayout(mainlayout);
-        exteriorLayout->addWidget(playerBar);
-        setCentralWidget(container);
-        auto* biblioteca = new QWidget;
-        auto* mainpanel = new QWidget;
-        auto* blayout = new QVBoxLayout;
-        auto* mplayout = new QVBoxLayout;
-        biblioteca->setLayout(blayout);
-        mainpanel->setLayout(mplayout);
-        mainlayout->addWidget(biblioteca, 27);
-        mainlayout->addWidget(mainpanel, 73);
-        biblioteca->setObjectName("sidebar");
-        mainpanel->setObjectName("mainpanel");
-        blayout->addWidget(new QLabel("LIBRARY"));
-        blayout->addWidget(new QLabel("MUSIC"));
-        blayout->addWidget(new QLabel("ARTISTS"));
-        blayout->addWidget(new QLabel("ALBUMS"));
-        blayout->addWidget(new QLabel("PLAYLISTS"));
-        blayout->addWidget(new QLabel("SPOTIFY"));
-        auto* sectionTitle = new QLabel("MUSIC");
-        auto* trackTitle = new QLabel("No song selected");
-        auto* trackMetadata = new QLabel("Select a track from your library");
-        auto* coverContainer = new QWidget;
-        auto* coverLayout = new QVBoxLayout(coverContainer);
-        sectionTitle->setObjectName("sectionTitle");
-        trackTitle->setObjectName("trackTitle");
-        trackMetadata->setObjectName("trackMetadata");
-        mplayout->addWidget(sectionTitle);
-        mplayout->addWidget(coverContainer);
-        mplayout->addWidget(trackTitle);
-        mplayout->addWidget(trackMetadata);
-        coverContainer->setMinimumSize(220, 220);
-        playerBar->setMinimumHeight(80);
-        auto* playerLayout = new QHBoxLayout(playerBar);
-        auto* songInfo = new QLabel("No song selected");
-        auto* backButton = new QPushButton("|<");
-        auto* playButton = new QPushButton(">");
-        auto* nextButton = new QPushButton(">|");
-        auto* rTime = new QLabel("0:00 / 0:00");
-        auto* volume = new QLabel("Volume");
-        auto* volumeSlider = new QSlider(Qt::Horizontal);
-        volumeSlider->setRange(0, 100);
-        volumeSlider->setValue(70);
-        auto* reproductionZone = new QWidget;
-        auto* reproductionLayout = new QHBoxLayout(reproductionZone);
-        playerLayout->addWidget(songInfo);
-        playerLayout->addStretch();
-        playerLayout->addWidget(reproductionZone);
-        reproductionLayout->addWidget(backButton);
-        reproductionLayout->addWidget(playButton);
-        reproductionLayout->addWidget(nextButton);
-        playerLayout->addWidget(rTime);
-        playerLayout->addWidget(volume);
-        playerLayout->addWidget(volumeSlider);
-        songInfo->setObjectName("songInfo");
-        backButton->setObjectName("backButton");
-        playButton->setObjectName("playButton");
-        nextButton->setObjectName("nextButton");
-        rTime->setObjectName("playbackTime");
-        volume->setObjectName("volumeLabel");
-        volumeSlider->setObjectName("volumeSlider");
+        resize(900,600);//Sets the size of the window
+        setWindowTitle("Tusa");//Sets th title of the window
+        auto* container = new QWidget(this);//Creates a container for the window
+        auto* exteriorLayout = new QVBoxLayout;//Creates a vertical layout for the container
+        auto* mainlayout = new QHBoxLayout;//Creates a horizontal layout for the content or something like that lol idk how to explain
+        auto* playerBar = new QWidget;//Creates a widget that is used as container for the player bar
+        container->setLayout(exteriorLayout);//Adds  the vertical layout to the container PD: I really miss her :(
+        exteriorLayout->addLayout(mainlayout);//Adds the horizontal layout to the vertical layout
+        exteriorLayout->addWidget(playerBar);//Adds the player bar at the bottom of the vertical layout
+        setCentralWidget(container);//Puts the container in the center
+        auto* biblioteca = new QWidget;//Creates a container for the sidebar
+        auto* mainpanel = new QWidget;//Creates the containere for the main panel
+        auto* blayout = new QVBoxLayout;//Creates a vertical layout for the sidebar
+        auto* mplayout = new QVBoxLayout;//Creates a vertical layout for the main panel
+        biblioteca->setLayout(blayout);//Adds the vertical layout to the sidebar
+        mainpanel->setLayout(mplayout);//Adds a vertical layout to the main panel
+        mainlayout->addWidget(biblioteca, 27);//Adds the sidebar to the main horizontal layout and sets 27% of the layout for the sidebar 
+        mainlayout->addWidget(mainpanel, 73);//Adds the main panel to the main layout just after the sidebar and sets 73% of the space for it
+        biblioteca->setObjectName("sidebar");//Sets the ON (object name) "sidebar" to the sidebar (biblioteca)
+        mainpanel->setObjectName("mainpanel");//Sets th ON "mainpanel" to the main panel
+        blayout->addWidget(new QLabel("LIBRARY"));//Creates and add a new label wiht the text library yo the sidebar layout
+        blayout->addWidget(new QLabel("MUSIC"));//Creates a new label with text music and add it to the sidebar layout
+        blayout->addWidget(new QLabel("ARTISTS"));//Again creates a new label and add it to the side bar panel PD: Im getting bored writting this comments
+        blayout->addWidget(new QLabel("ALBUMS"));//New label then add it to the sidebar layout
+        blayout->addWidget(new QLabel("PLAYLISTS"));//New label then sidebar layout
+        blayout->addWidget(new QLabel("SPOTIFY"));//New label then sidebar again PD: I hope this will be usefull for me or someone else
+        auto* sectionTitle = new QLabel("MUSIC");//Creates a label and named it section Title
+        auto* trackTitle = new QLabel("No song selected");//Creates a new label named trackTitle
+        auto* trackMetadata = new QLabel("Select a track from your library");//Creates a new label named trackMetadata for the album and artist or something i dont remember
+        auto* coverContainer = new QWidget;//Creates a new widget as container for the cover
+        auto* coverLayout = new QVBoxLayout(coverContainer);//Creates a new vertical layout and assigns the cover container as father
+        auto* coverPlaceholder = new QLabel("Album Artwork");//Creates a new label for the cover
+        coverPlaceholder->setObjectName("coverPlaceholder");//Sets the ON for the cover label
+        coverLayout->addWidget(coverPlaceholder, 1, Qt::AlignCenter);//Adds the cover label to the cover layout and sets all the space for it plus it align it to the center
+        sectionTitle->setObjectName("sectionTitle");//Sets the ON of scetionTitle
+        trackTitle->setObjectName("trackTitle");//Sets the ON of trackTitle
+        trackMetadata->setObjectName("trackMetadata");//Sets the ON for trackMetadata
+        mplayout->addWidget(sectionTitle);//Adds sectionTitle to the main panel
+        mplayout->addWidget(coverContainer);//Adds the cover container to the main panel
+        mplayout->addWidget(trackTitle);//Adds trackTitle to the main panel
+        mplayout->addWidget(trackMetadata);//Adds trackMetadata to the main panel 
+        coverContainer->setMinimumSize(220, 220);//Sets the minimum size of the cover (220px x 220px)
+        playerBar->setMinimumHeight(80);//Sets the minimumheight of the player bar 80px
+        playerBar->setObjectName("playerBar");//sets the ON of the player bar
+        auto* playerLayout = new QHBoxLayout(playerBar);//Creates a new horizontal layout and sets the playerbar as father
+        auto* songInfo = new QLabel("No song selected");//Creates a label for the music info
+        auto* backButton = new QPushButton("|<");//Creates the back button
+        auto* playButton = new QPushButton(">");//Creates the play button
+        auto* nextButton = new QPushButton(">|");//Creates the next button
+        auto* rTime = new QLabel("0:00 / 0:00");//Creates a label for the reproduction time
+        auto* volume = new QLabel("Volume");//A label for the volume info
+        auto* volumeSlider = new QSlider(Qt::Horizontal);//Creates a horizontal slider to set the volume
+        volumeSlider->setRange(0, 100);//Sets the slider range
+        volumeSlider->setValue(70);//Sets the slider to a inittial value of 70
+        auto* progressBar = new QSlider(Qt::Horizontal);//Creates another horizontal slider for the song progress
+        progressBar->setObjectName("progressBar");//set the slider ON
+        progressBar->setRange(0, 100);//Set the slider range
+        progressBar->setValue(0);//Sets the inittial value of the slider to 0
+        auto* reproductionZone = new QWidget;//Creates a new container for the control buttons 
+        reproductionZone->setObjectName("reproductionZone");//Set the ON for the coontainer
+        auto* reproductionLayout = new QHBoxLayout(reproductionZone);//Creates a horizontal layout for the button container
+        playerLayout->addWidget(songInfo);//Adds the song info to the main layout of the player bar
+        playerLayout->addStretch();//adds flexible space 
+        playerLayout->addWidget(reproductionZone);//Adds the button container to the playerbar layout
+        reproductionLayout->addWidget(backButton);//Adds the back button to the button container
+        reproductionLayout->addWidget(playButton);//Adds the button to the button container
+        reproductionLayout->addWidget(nextButton);//Adds the button to the button container
+        playerLayout->addWidget(rTime);//Adds the reproduction time to the playerbar layout
+        playerLayout->addWidget(volume);//Adds the volume info to the player bar layout
+        playerLayout->addWidget(volumeSlider);//Adds the volume slider to the playerbar layout
+        songInfo->setObjectName("songInfo");//Sets the ON of song Info
+        backButton->setObjectName("backButton");//sets ON of the backbutton
+        playButton->setObjectName("playButton");//sets the ON of the play Button
+        nextButton->setObjectName("nextButton"); //sets the ON of the next button
+        rTime->setObjectName("playbackTime");//sets the ON of the reproduction time
+        volume->setObjectName("volumeLabel");//sets the ON of the volume info
+        volumeSlider->setObjectName("volumeSlider");//sets the ON of the volume slider
     }
-MainWindow::~MainWindow() = default;
+MainWindow::~MainWindow() = default;// the destructor lol
