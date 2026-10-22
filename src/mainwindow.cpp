@@ -59,7 +59,11 @@ MainWindow::MainWindow(QWidget* parent)
         coverContainer->setMinimumSize(220, 220);//Sets the minimum size of the cover (220px x 220px)
         playerBar->setMinimumHeight(80);//Sets the minimumheight of the player bar 80px
         playerBar->setObjectName("playerBar");//sets the ON of the player bar
-        auto* playerLayout = new QHBoxLayout(playerBar);//Creates a new horizontal layout and sets the playerbar as father
+        auto* playerVLayout = new QVBoxLayout(playerBar);//Creates a new vertical layout and sets the player bar as fathr
+        auto* progressContainer = new QWidget;//A container for the progress layout
+        auto* progressLayout = new QHBoxLayout(progressContainer);//Creates a horizontal for the progress bar and the info
+        auto* controlIContainer = new QWidget;//A container for player h layout
+        auto* playerHLayout = new QHBoxLayout(controlIContainer);//Creates a new horizontal layout for the player bar
         auto* songInfo = new QLabel("No song selected");//Creates a label for the music info
         auto* backButton = new QPushButton("|<");//Creates the back button
         auto* playButton = new QPushButton(">");//Creates the play button
@@ -76,15 +80,18 @@ MainWindow::MainWindow(QWidget* parent)
         auto* reproductionZone = new QWidget;//Creates a new container for the control buttons 
         reproductionZone->setObjectName("reproductionZone");//Set the ON for the coontainer
         auto* reproductionLayout = new QHBoxLayout(reproductionZone);//Creates a horizontal layout for the button container
-        playerLayout->addWidget(songInfo);//Adds the song info to the main layout of the player bar
-        playerLayout->addStretch();//adds flexible space 
-        playerLayout->addWidget(reproductionZone);//Adds the button container to the playerbar layout
+        playerVLayout->addWidget(progressContainer);//Adds the progress container at the top
+        playerVLayout->addWidget(controlIContainer);//Adds the control i container at the bottom
+        progressLayout->addWidget(progressBar);//Adds the progress bar to the progress layout
+        playerHLayout->addWidget(songInfo);//Adds the song info to the main layout of the player bar
+        playerHLayout->addStretch();//adds flexible space 
+        playerHLayout->addWidget(reproductionZone);//Adds the button container to the playerbar layout
         reproductionLayout->addWidget(backButton);//Adds the back button to the button container
         reproductionLayout->addWidget(playButton);//Adds the button to the button container
         reproductionLayout->addWidget(nextButton);//Adds the button to the button container
-        playerLayout->addWidget(rTime);//Adds the reproduction time to the playerbar layout
-        playerLayout->addWidget(volume);//Adds the volume info to the player bar layout
-        playerLayout->addWidget(volumeSlider);//Adds the volume slider to the playerbar layout
+        playerHLayout->addWidget(rTime);//Adds the reproduction time to the playerbar layout
+        playerHLayout->addWidget(volume);//Adds the volume info to the player bar layout
+        playerHLayout->addWidget(volumeSlider);//Adds the volume slider to the playerbar layout
         songInfo->setObjectName("songInfo");//Sets the ON of song Info
         backButton->setObjectName("backButton");//sets ON of the backbutton
         playButton->setObjectName("playButton");//sets the ON of the play Button
