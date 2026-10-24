@@ -11,5 +11,4 @@ public:
 
 private slots:
     void openFile();
-    void ppState();
 };

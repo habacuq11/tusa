@@ -16,6 +16,9 @@
 #include <QFileDialog>
 #include <QUrl>
 
+QMediaPlayer* player = new QMediaPlayer;//Creates the media player
+QAudioOutput* audioOutput = new QAudioOutput;//Creates the audio output
+
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     {
@@ -25,8 +28,6 @@ MainWindow::MainWindow(QWidget* parent)
         auto* exteriorLayout = new QVBoxLayout;//Creates a vertical layout for the container
         auto* mainlayout = new QHBoxLayout;//Creates a horizontal layout for the content or something like that lol idk how to explain
         auto* playerBar = new QWidget;//Creates a widget that is used as container for the player bar
-        QMediaPlayer* player = new QMediaPlayer(this);
-        QAudioOutput* audioOutput = new QAudioOutput(this);
         player->setAudioOutput(audioOutput);//Sets the audio output for the media player
         container->setLayout(exteriorLayout);//Adds  the vertical layout to the container PD: I really miss her :(
         exteriorLayout->addLayout(mainlayout);//Adds the horizontal layout to the vertical layout
@@ -111,5 +112,20 @@ MainWindow::MainWindow(QWidget* parent)
         volume->setObjectName("volumeLabel");//sets the ON of the volume info
         volumeSlider->setObjectName("volumeSlider");//sets the ON of the volume slider
         audioOutput->setVolume(volumeSlider->value() / 100.0);//Sets the volume slider value as the audio output volume
+        connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);
+    }
+
+    void MainWindow::openFile(){
+        QString file = QFileDialog::getOpenFileName(this, "Select song", "", "Audio (*.mp3, *.wav, *.flac);;All (*)");
+
+        if(file.isEmpty()){
+            return;
+        };
+
+        player->setSource(QUrl::fromLocalFile(file));
+        QFileInfo info(file);
+        QString name = info.baseName();
+        player->play();
+
     }
 MainWindow::~MainWindow() = default;// the destructor lol
