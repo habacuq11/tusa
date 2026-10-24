@@ -25,9 +25,9 @@ MainWindow::MainWindow(QWidget* parent)
         auto* exteriorLayout = new QVBoxLayout;//Creates a vertical layout for the container
         auto* mainlayout = new QHBoxLayout;//Creates a horizontal layout for the content or something like that lol idk how to explain
         auto* playerBar = new QWidget;//Creates a widget that is used as container for the player bar
-        auto* mediaPlayer = new QMediaPlayer(this);//Creates a widget to control the media player
-        auto* audioOutput = new QAudioOutput(this);//Creates a audio output
-        mediaPlayer->setAudioOutput(audioOutput);//Sets the audio output for the media player
+        QMediaPlayer* player = new QMediaPlayer(this);
+        QAudioOutput* audioOutput = new QAudioOutput(this);
+        player->setAudioOutput(audioOutput);//Sets the audio output for the media player
         container->setLayout(exteriorLayout);//Adds  the vertical layout to the container PD: I really miss her :(
         exteriorLayout->addLayout(mainlayout);//Adds the horizontal layout to the vertical layout
         exteriorLayout->addWidget(playerBar);//Adds the player bar at the bottom of the vertical layout
@@ -111,17 +111,5 @@ MainWindow::MainWindow(QWidget* parent)
         volume->setObjectName("volumeLabel");//sets the ON of the volume info
         volumeSlider->setObjectName("volumeSlider");//sets the ON of the volume slider
         audioOutput->setVolume(volumeSlider->value() / 100.0);//Sets the volume slider value as the audio output volume
-        int playing = 0;
-        if(QMediaPlayer::isPlaying){
-             playing = 1;
-        }else{
-            playing = 0;
-        };
-        if(playing==1){
-            connect(playButton, &QPushButton::clicked, mediaPlayer, &QMediaPlayer::play);
-        }else{
-            connect(playButton, &QPushButton::clicked, mediaPlayer, &QMediaPlayer::pause);
-        };
-
     }
 MainWindow::~MainWindow() = default;// the destructor lol

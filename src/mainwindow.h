@@ -8,4 +8,8 @@ class MainWindow : public QMainWindow{
 public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow() override;
+
+private slots:
+    void openFile();
+    void ppState();
 };
