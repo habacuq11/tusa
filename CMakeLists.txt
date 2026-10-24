@@ -37,7 +37,7 @@ target_include_directories(tusa PRIVATE
     "${CMAKE_SOURCE_DIR}/src"
 )
 
- target_link_libraries(tusa PRIVATE
+target_link_libraries(tusa PRIVATE
      Qt6::Multimedia
      Qt6::Widgets
     )

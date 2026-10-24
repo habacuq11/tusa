@@ -11,6 +11,10 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QSlider>
+#include <QAudioOutput>
+#include <QMediaPlayer>
+#include <QFileDialog>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -21,6 +25,9 @@ MainWindow::MainWindow(QWidget* parent)
         auto* exteriorLayout = new QVBoxLayout;//Creates a vertical layout for the container
         auto* mainlayout = new QHBoxLayout;//Creates a horizontal layout for the content or something like that lol idk how to explain
         auto* playerBar = new QWidget;//Creates a widget that is used as container for the player bar
+        auto* mediaPlayer = new QMediaPlayer(this);//Creates a widget to control the media player
+        auto* audioOutput = new QAudioOutput(this);//Creates a audio output
+        mediaPlayer->setAudioOutput(audioOutput);//Sets the audio output for the media player
         container->setLayout(exteriorLayout);//Adds  the vertical layout to the container PD: I really miss her :(
         exteriorLayout->addLayout(mainlayout);//Adds the horizontal layout to the vertical layout
         exteriorLayout->addWidget(playerBar);//Adds the player bar at the bottom of the vertical layout
@@ -42,6 +49,7 @@ MainWindow::MainWindow(QWidget* parent)
         blayout->addWidget(new QLabel("PLAYLISTS"));//New label then sidebar layout
         blayout->addWidget(new QLabel("SPOTIFY"));//New label then sidebar again PD: I hope this will be usefull for me or someone else
         auto* sectionTitle = new QLabel("MUSIC");//Creates a label and named it section Title
+        auto* selectSong = new QPushButton("select a song uwu (just for proves)");
         auto* trackTitle = new QLabel("No song selected");//Creates a new label named trackTitle
         auto* trackMetadata = new QLabel("Select a track from your library");//Creates a new label named trackMetadata for the album and artist or something i dont remember
         auto* coverContainer = new QWidget;//Creates a new widget as container for the cover
@@ -53,6 +61,7 @@ MainWindow::MainWindow(QWidget* parent)
         trackTitle->setObjectName("trackTitle");//Sets the ON of trackTitle
         trackMetadata->setObjectName("trackMetadata");//Sets the ON for trackMetadata
         mplayout->addWidget(sectionTitle);//Adds sectionTitle to the main panel
+        mplayout->addWidget(selectSong);
         mplayout->addWidget(coverContainer);//Adds the cover container to the main panel
         mplayout->addWidget(trackTitle);//Adds trackTitle to the main panel
         mplayout->addWidget(trackMetadata);//Adds trackMetadata to the main panel 
@@ -68,28 +77,30 @@ MainWindow::MainWindow(QWidget* parent)
         auto* backButton = new QPushButton("|<");//Creates the back button
         auto* playButton = new QPushButton(">");//Creates the play button
         auto* nextButton = new QPushButton(">|");//Creates the next button
-        auto* rTime = new QLabel("0:00 / 0:00");//Creates a label for the reproduction time
+        auto* rTime = new QLabel("0:00");//Creates a label for the reproduction time
+        auto* tTime = new QLabel("0:00");//Creates a label for the transcurred time
         auto* volume = new QLabel("Volume");//A label for the volume info
         auto* volumeSlider = new QSlider(Qt::Horizontal);//Creates a horizontal slider to set the volume
         volumeSlider->setRange(0, 100);//Sets the slider range
         volumeSlider->setValue(70);//Sets the slider to a inittial value of 70
         auto* progressBar = new QSlider(Qt::Horizontal);//Creates another horizontal slider for the song progress
         progressBar->setObjectName("progressBar");//set the slider ON
-        progressBar->setRange(0, 100);//Set the slider range
+        progressBar->setRange(0, 1000);//Set the slider range
         progressBar->setValue(0);//Sets the inittial value of the slider to 0
         auto* reproductionZone = new QWidget;//Creates a new container for the control buttons 
         reproductionZone->setObjectName("reproductionZone");//Set the ON for the coontainer
         auto* reproductionLayout = new QHBoxLayout(reproductionZone);//Creates a horizontal layout for the button container
         playerVLayout->addWidget(progressContainer);//Adds the progress container at the top
         playerVLayout->addWidget(controlIContainer);//Adds the control i container at the bottom
+        progressLayout->addWidget(tTime);//Adds the transcurred time
         progressLayout->addWidget(progressBar);//Adds the progress bar to the progress layout
+        progressLayout->addWidget(rTime);//Adds the total reproduction time
         playerHLayout->addWidget(songInfo);//Adds the song info to the main layout of the player bar
         playerHLayout->addStretch();//adds flexible space 
         playerHLayout->addWidget(reproductionZone);//Adds the button container to the playerbar layout
         reproductionLayout->addWidget(backButton);//Adds the back button to the button container
         reproductionLayout->addWidget(playButton);//Adds the button to the button container
         reproductionLayout->addWidget(nextButton);//Adds the button to the button container
-        playerHLayout->addWidget(rTime);//Adds the reproduction time to the playerbar layout
         playerHLayout->addWidget(volume);//Adds the volume info to the player bar layout
         playerHLayout->addWidget(volumeSlider);//Adds the volume slider to the playerbar layout
         songInfo->setObjectName("songInfo");//Sets the ON of song Info
@@ -99,5 +110,18 @@ MainWindow::MainWindow(QWidget* parent)
         rTime->setObjectName("playbackTime");//sets the ON of the reproduction time
         volume->setObjectName("volumeLabel");//sets the ON of the volume info
         volumeSlider->setObjectName("volumeSlider");//sets the ON of the volume slider
+        audioOutput->setVolume(volumeSlider->value() / 100.0);//Sets the volume slider value as the audio output volume
+        int playing = 0;
+        if(QMediaPlayer::isPlaying){
+             playing = 1;
+        }else{
+            playing = 0;
+        };
+        if(playing==1){
+            connect(playButton, &QPushButton::clicked, mediaPlayer, &QMediaPlayer::play);
+        }else{
+            connect(playButton, &QPushButton::clicked, mediaPlayer, &QMediaPlayer::pause);
+        };
+
     }
 MainWindow::~MainWindow() = default;// the destructor lol
