@@ -51,21 +51,21 @@ MainWindow::MainWindow(QWidget* parent)
         blayout->addWidget(new QLabel("SPOTIFY"));//New label then sidebar again PD: I hope this will be usefull for me or someone else
         auto* sectionTitle = new QLabel("MUSIC");//Creates a label and named it section Title
         auto* selectSong = new QPushButton("select a song uwu (just for proves)");
-        auto* trackTitle = new QLabel("No song selected");//Creates a new label named trackTitle
-        auto* trackMetadata = new QLabel("Select a track from your library");//Creates a new label named trackMetadata for the album and artist or something i dont remember
+        trackTitle_ = new QLabel("No song selected");//Creates a new label named trackTitle
+        trackMetadata_ = new QLabel("Select a track from your library");//Creates a new label named trackMetadata for the album and artist or something i dont remember
         auto* coverContainer = new QWidget;//Creates a new widget as container for the cover
         auto* coverLayout = new QVBoxLayout(coverContainer);//Creates a new vertical layout and assigns the cover container as father
         auto* coverPlaceholder = new QLabel("Album Artwork");//Creates a new label for the cover
         coverPlaceholder->setObjectName("coverPlaceholder");//Sets the ON for the cover label
         coverLayout->addWidget(coverPlaceholder, 1, Qt::AlignCenter);//Adds the cover label to the cover layout and sets all the space for it plus it align it to the center
         sectionTitle->setObjectName("sectionTitle");//Sets the ON of scetionTitle
-        trackTitle->setObjectName("trackTitle");//Sets the ON of trackTitle
-        trackMetadata->setObjectName("trackMetadata");//Sets the ON for trackMetadata
+        trackTitle_->setObjectName("trackTitle");//Sets the ON of trackTitle
+        trackMetadata_->setObjectName("trackMetadata");//Sets the ON for trackMetadata
         mplayout->addWidget(sectionTitle);//Adds sectionTitle to the main panel
         mplayout->addWidget(selectSong);
         mplayout->addWidget(coverContainer);//Adds the cover container to the main panel
-        mplayout->addWidget(trackTitle);//Adds trackTitle to the main panel
-        mplayout->addWidget(trackMetadata);//Adds trackMetadata to the main panel 
+        mplayout->addWidget(trackTitle_);//Adds trackTitle to the main panel
+        mplayout->addWidget(trackMetadata_);//Adds trackMetadata to the main panel 
         coverContainer->setMinimumSize(220, 220);//Sets the minimum size of the cover (220px x 220px)
         playerBar->setMinimumHeight(80);//Sets the minimumheight of the player bar 80px
         playerBar->setObjectName("playerBar");//sets the ON of the player bar
@@ -74,10 +74,10 @@ MainWindow::MainWindow(QWidget* parent)
         auto* progressLayout = new QHBoxLayout(progressContainer);//Creates a horizontal for the progress bar and the info
         auto* controlIContainer = new QWidget;//A container for player h layout
         auto* playerHLayout = new QHBoxLayout(controlIContainer);//Creates a new horizontal layout for the player bar
-        auto* songInfo = new QLabel("No song selected");//Creates a label for the music info
-        auto* backButton = new QPushButton("|<");//Creates the back button
-        auto* playButton = new QPushButton(">");//Creates the play button
-        auto* nextButton = new QPushButton(">|");//Creates the next button
+        songInfo_ = new QLabel("No song selected");//Creates a label for the music info
+        backButton_ = new QPushButton("|<");//Creates the back button
+        playButton_ = new QPushButton(">");//Creates the play button
+        nextButton_ = new QPushButton(">|");//Creates the next button
         auto* rTime = new QLabel("0:00");//Creates a label for the reproduction time
         auto* tTime = new QLabel("0:00");//Creates a label for the transcurred time
         auto* volume = new QLabel("Volume");//A label for the volume info
@@ -96,24 +96,25 @@ MainWindow::MainWindow(QWidget* parent)
         progressLayout->addWidget(tTime);//Adds the transcurred time
         progressLayout->addWidget(progressBar);//Adds the progress bar to the progress layout
         progressLayout->addWidget(rTime);//Adds the total reproduction time
-        playerHLayout->addWidget(songInfo);//Adds the song info to the main layout of the player bar
+        playerHLayout->addWidget(songInfo_);//Adds the song info to the main layout of the player bar
         playerHLayout->addStretch();//adds flexible space 
         playerHLayout->addWidget(reproductionZone);//Adds the button container to the playerbar layout
-        reproductionLayout->addWidget(backButton);//Adds the back button to the button container
-        reproductionLayout->addWidget(playButton);//Adds the button to the button container
-        reproductionLayout->addWidget(nextButton);//Adds the button to the button container
+        reproductionLayout->addWidget(backButton_);//Adds the back button to the button container
+        reproductionLayout->addWidget(playButton_);//Adds the button to the button container
+        reproductionLayout->addWidget(nextButton_);//Adds the button to the button container
         playerHLayout->addWidget(volume);//Adds the volume info to the player bar layout
         playerHLayout->addWidget(volumeSlider);//Adds the volume slider to the playerbar layout
-        songInfo->setObjectName("songInfo");//Sets the ON of song Info
-        backButton->setObjectName("backButton");//sets ON of the backbutton
-        playButton->setObjectName("playButton");//sets the ON of the play Button
-        nextButton->setObjectName("nextButton"); //sets the ON of the next button
+        songInfo_->setObjectName("songInfo");//Sets the ON of song Info
+        backButton_->setObjectName("backButton");//sets ON of the backbutton
+        playButton_->setObjectName("playButton");//sets the ON of the play Button
+        nextButton_->setObjectName("nextButton"); //sets the ON of the next button
         rTime->setObjectName("playbackTime");//sets the ON of the reproduction time
         volume->setObjectName("volumeLabel");//sets the ON of the volume info
         volumeSlider->setObjectName("volumeSlider");//sets the ON of the volume slider
         AudioOutput->setVolume(volumeSlider->value() / 100.0);//Sets the volume slider value as the audio output volume
         connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);
         connect(volumeSlider, &QSlider::valueChanged, AudioOutput, &QAudioOutput::setVolume);
+        connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);
     }
 
 
@@ -127,7 +128,18 @@ MainWindow::MainWindow(QWidget* parent)
         MediaPlayer->setSource(QUrl::fromLocalFile(file));
         QFileInfo info(file);
         QString name = info.baseName();
+        trackTitle_->setText(name);
+        songInfo_->setText(name);
         MediaPlayer->play();
+    }
 
+    void MainWindow::ppState(){
+        if(MediaPlayer->playbackState()==QMediaPlayer::PlayingState){
+            MediaPlayer->pause();
+            playButton_->setText("||");
+        }else{
+            MediaPlayer->play();
+            playButton_->setText(">");
+        }
     }
 MainWindow::~MainWindow() = default;// the destructor lol

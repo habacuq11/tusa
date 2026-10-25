@@ -5,6 +5,8 @@
 class QMediaPlayer;
 class QAudioOutput;
 class QLabel;
+class QPushButton;
+class QSlider;
 
 
 class MainWindow : public QMainWindow{
@@ -15,6 +17,8 @@ public:
 
 private slots:
     void openFile();
+    void ppState();
+    void volumeChanged(int value);
 
 private:
     QMediaPlayer* MediaPlayer;
@@ -22,4 +26,7 @@ private:
     QLabel* trackTitle_;
     QLabel* trackMetadata_;
     QLabel* songInfo_;
+    QPushButton* backButton_;
+    QPushButton* playButton_;
+    QPushButton* nextButton_;
 };
