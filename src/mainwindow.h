@@ -30,4 +30,5 @@ private:
     QPushButton* playButton_;
     QPushButton* nextButton_;
     QSlider* volumeSlider_;
+    QLabel* volume_;
 };

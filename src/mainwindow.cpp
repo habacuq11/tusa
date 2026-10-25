@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget* parent)
         nextButton_ = new QPushButton(">|");//Creates the next button
         auto* rTime = new QLabel("0:00");//Creates a label for the reproduction time
         auto* tTime = new QLabel("0:00");//Creates a label for the transcurred time
-        auto* volume = new QLabel("Volume");//A label for the volume info
+        volume_ = new QLabel("Volume");//A label for the volume info
         volumeSlider_ = new QSlider(Qt::Horizontal);//Creates a horizontal slider to set the volume
         volumeSlider_->setRange(0, 100);//Sets the slider range
         volumeSlider_->setValue(70);//Sets the slider to a inittial value of 70
@@ -102,18 +102,18 @@ MainWindow::MainWindow(QWidget* parent)
         reproductionLayout->addWidget(backButton_);//Adds the back button to the button container
         reproductionLayout->addWidget(playButton_);//Adds the button to the button container
         reproductionLayout->addWidget(nextButton_);//Adds the button to the button container
-        playerHLayout->addWidget(volume);//Adds the volume info to the player bar layout
+        playerHLayout->addWidget(volume_);//Adds the volume info to the player bar layout
         playerHLayout->addWidget(volumeSlider_);//Adds the volume slider to the playerbar layout
         songInfo_->setObjectName("songInfo");//Sets the ON of song Info
         backButton_->setObjectName("backButton");//sets ON of the backbutton
         playButton_->setObjectName("playButton");//sets the ON of the play Button
         nextButton_->setObjectName("nextButton"); //sets the ON of the next button
         rTime->setObjectName("playbackTime");//sets the ON of the reproduction time
-        volume->setObjectName("volumeLabel");//sets the ON of the volume info
-        volumeSlider->setObjectName("volumeSlider");//sets the ON of the volume slider
-        AudioOutput->setVolume(volumeSlider_->value() / 100.0);//Sets the volume slider value as the audio output volume
+        volume_->setObjectName("volumeLabel");//sets the ON of the volume info
+        volumeSlider_->setObjectName("volumeSlider");//sets the ON of the volume slider
+        volumeChanged(volumeSlider_->value());
         connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);
-        connect(volumeSlider_, &QSlider::valueChanged, AudioOutput, &QAudioOutput::setVolume);
+        connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::volumeChanged);
         connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);
     }
 
@@ -136,10 +136,15 @@ MainWindow::MainWindow(QWidget* parent)
     void MainWindow::ppState(){
         if(MediaPlayer->playbackState()==QMediaPlayer::PlayingState){
             MediaPlayer->pause();
-            playButton_->setText("||");
+            playButton_->setText(">");
         }else{
             MediaPlayer->play();
-            playButton_->setText(">");
+            playButton_->setText("||");
         }
+    }
+
+    void MainWindow::volumeChanged(int value){
+        AudioOutput->setVolume(value / 100.0);
+        volume_->setText(QString("Vol: %1%").arg(value));
     }
 MainWindow::~MainWindow() = default;// the destructor lol
