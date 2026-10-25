@@ -15,20 +15,20 @@
 #include <QMediaPlayer>
 #include <QFileDialog>
 #include <QUrl>
-
-QMediaPlayer* player = new QMediaPlayer;//Creates the media player
-QAudioOutput* audioOutput = new QAudioOutput;//Creates the audio output
+#include <QFileInfo>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     {
         resize(900,600);//Sets the size of the window
         setWindowTitle("Tusa");//Sets th title of the window
+        MediaPlayer = new QMediaPlayer(this);
+        AudioOutput = new QAudioOutput(this);
         auto* container = new QWidget(this);//Creates a container for the window
         auto* exteriorLayout = new QVBoxLayout;//Creates a vertical layout for the container
         auto* mainlayout = new QHBoxLayout;//Creates a horizontal layout for the content or something like that lol idk how to explain
         auto* playerBar = new QWidget;//Creates a widget that is used as container for the player bar
-        player->setAudioOutput(audioOutput);//Sets the audio output for the media player
+        MediaPlayer->setAudioOutput(AudioOutput);//Sets the audio output for the media player
         container->setLayout(exteriorLayout);//Adds  the vertical layout to the container PD: I really miss her :(
         exteriorLayout->addLayout(mainlayout);//Adds the horizontal layout to the vertical layout
         exteriorLayout->addWidget(playerBar);//Adds the player bar at the bottom of the vertical layout
@@ -111,21 +111,23 @@ MainWindow::MainWindow(QWidget* parent)
         rTime->setObjectName("playbackTime");//sets the ON of the reproduction time
         volume->setObjectName("volumeLabel");//sets the ON of the volume info
         volumeSlider->setObjectName("volumeSlider");//sets the ON of the volume slider
-        audioOutput->setVolume(volumeSlider->value() / 100.0);//Sets the volume slider value as the audio output volume
+        AudioOutput->setVolume(volumeSlider->value() / 100.0);//Sets the volume slider value as the audio output volume
         connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);
+        connect(volumeSlider, &QSlider::valueChanged, AudioOutput, &QAudioOutput::setVolume);
     }
 
+
     void MainWindow::openFile(){
-        QString file = QFileDialog::getOpenFileName(this, "Select song", "", "Audio (*.mp3, *.wav, *.flac);;All (*)");
+        QString file = QFileDialog::getOpenFileName(this, "Select song", "", "Audio (*.mp3 *.wav *.flac);;All (*)");
 
         if(file.isEmpty()){
             return;
         };
 
-        player->setSource(QUrl::fromLocalFile(file));
+        MediaPlayer->setSource(QUrl::fromLocalFile(file));
         QFileInfo info(file);
         QString name = info.baseName();
-        player->play();
+        MediaPlayer->play();
 
     }
 MainWindow::~MainWindow() = default;// the destructor lol
