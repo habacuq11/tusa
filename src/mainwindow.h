@@ -29,4 +29,5 @@ private:
     QPushButton* backButton_;
     QPushButton* playButton_;
     QPushButton* nextButton_;
+    QSlider* volumeSlider_;
 };

@@ -81,9 +81,9 @@ MainWindow::MainWindow(QWidget* parent)
         auto* rTime = new QLabel("0:00");//Creates a label for the reproduction time
         auto* tTime = new QLabel("0:00");//Creates a label for the transcurred time
         auto* volume = new QLabel("Volume");//A label for the volume info
-        auto* volumeSlider = new QSlider(Qt::Horizontal);//Creates a horizontal slider to set the volume
-        volumeSlider->setRange(0, 100);//Sets the slider range
-        volumeSlider->setValue(70);//Sets the slider to a inittial value of 70
+        volumeSlider_ = new QSlider(Qt::Horizontal);//Creates a horizontal slider to set the volume
+        volumeSlider_->setRange(0, 100);//Sets the slider range
+        volumeSlider_->setValue(70);//Sets the slider to a inittial value of 70
         auto* progressBar = new QSlider(Qt::Horizontal);//Creates another horizontal slider for the song progress
         progressBar->setObjectName("progressBar");//set the slider ON
         progressBar->setRange(0, 1000);//Set the slider range
@@ -103,7 +103,7 @@ MainWindow::MainWindow(QWidget* parent)
         reproductionLayout->addWidget(playButton_);//Adds the button to the button container
         reproductionLayout->addWidget(nextButton_);//Adds the button to the button container
         playerHLayout->addWidget(volume);//Adds the volume info to the player bar layout
-        playerHLayout->addWidget(volumeSlider);//Adds the volume slider to the playerbar layout
+        playerHLayout->addWidget(volumeSlider_);//Adds the volume slider to the playerbar layout
         songInfo_->setObjectName("songInfo");//Sets the ON of song Info
         backButton_->setObjectName("backButton");//sets ON of the backbutton
         playButton_->setObjectName("playButton");//sets the ON of the play Button
@@ -111,9 +111,9 @@ MainWindow::MainWindow(QWidget* parent)
         rTime->setObjectName("playbackTime");//sets the ON of the reproduction time
         volume->setObjectName("volumeLabel");//sets the ON of the volume info
         volumeSlider->setObjectName("volumeSlider");//sets the ON of the volume slider
-        AudioOutput->setVolume(volumeSlider->value() / 100.0);//Sets the volume slider value as the audio output volume
+        AudioOutput->setVolume(volumeSlider_->value() / 100.0);//Sets the volume slider value as the audio output volume
         connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);
-        connect(volumeSlider, &QSlider::valueChanged, AudioOutput, &QAudioOutput::setVolume);
+        connect(volumeSlider_, &QSlider::valueChanged, AudioOutput, &QAudioOutput::setVolume);
         connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);
     }
 
