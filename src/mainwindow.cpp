@@ -15,7 +15,8 @@
 #include <QMediaPlayer>
 #include <QFileDialog>
 #include <QUrl>
-#include <QFileInfo>
+#include <QMediaMetaData>
+#include <QPixmap>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -55,9 +56,9 @@ MainWindow::MainWindow(QWidget* parent)
         trackMetadata_ = new QLabel("Select a track from your library");//Creates a new label named trackMetadata for the album and artist or something i dont remember
         auto* coverContainer = new QWidget;//Creates a new widget as container for the cover
         auto* coverLayout = new QVBoxLayout(coverContainer);//Creates a new vertical layout and assigns the cover container as father
-        auto* coverPlaceholder = new QLabel("Album Artwork");//Creates a new label for the cover
-        coverPlaceholder->setObjectName("coverPlaceholder");//Sets the ON for the cover label
-        coverLayout->addWidget(coverPlaceholder, 1, Qt::AlignCenter);//Adds the cover label to the cover layout and sets all the space for it plus it align it to the center
+        coverPlaceholder_ = new QLabel("Album Artwork");//Creates a new label for the cover
+        coverPlaceholder_->setObjectName("coverPlaceholder");//Sets the ON for the cover label
+        coverLayout->addWidget(coverPlaceholder_, 1, Qt::AlignCenter);//Adds the cover label to the cover layout and sets all the space for it plus it align it to the center
         sectionTitle->setObjectName("sectionTitle");//Sets the ON of scetionTitle
         trackTitle_->setObjectName("trackTitle");//Sets the ON of trackTitle
         trackMetadata_->setObjectName("trackMetadata");//Sets the ON for trackMetadata
@@ -99,6 +100,7 @@ MainWindow::MainWindow(QWidget* parent)
         playerHLayout->addWidget(songInfo_);//Adds the song info to the main layout of the player bar
         playerHLayout->addStretch();//adds flexible space 
         playerHLayout->addWidget(reproductionZone);//Adds the button container to the playerbar layout
+        playerHLayout->addStretch();
         reproductionLayout->addWidget(backButton_);//Adds the back button to the button container
         reproductionLayout->addWidget(playButton_);//Adds the button to the button container
         reproductionLayout->addWidget(nextButton_);//Adds the button to the button container
@@ -118,6 +120,39 @@ MainWindow::MainWindow(QWidget* parent)
         connect(MediaPlayer, &QMediaPlayer::positionChanged, this, MainWindow::posChanged);
         connect(MediaPlayer, &QMediaPlayer::durationChanged, this, MainWindow::durChanged);
         connect(progressBar_, &QSlider::sliderMoved, this, MainWindow::progressMoved);
+        connect(MediaPlayer, &QMediaPlayer::metaDataChanged, this, [this](){
+            QMediaMetaData meta = MediaPlayer->metaData();
+
+            QString title = meta.value(QMediaMetaData::Title).toString();
+            QString album = meta.value(QMediaMetaData::AlbumTitle).toString();
+            QString artist = meta.value(QMediaMetaData::ContributingArtist).toString();
+            QVariant cover = meta.value(QMediaMetaData::CoverArtImage);
+
+            if(!title.isEmpty()){
+                trackTitle_->setText(title);
+                songInfo_->setText(title);
+            }
+
+            if(!artist.isEmpty() || !album.isEmpty()){
+                trackMetadata_->setText(QString("%1 - %2").arg(artist, album));
+            }
+
+            QPixmap pix;
+            if(cover.canConvert<QImage>()){
+                pix = QPixmap::fromImage(cover.value<QImage>());
+            }else if(cover.canConvert<QPixmap>()){
+                pix = cover.value<QPixmap>();
+            }else if(cover.canConvert<QByteArray>()){
+                pix.loadFromData(cover.value<QByteArray>());
+            }else if(cover.canConvert<QUrl>()){
+                pix.load(cover.value<QUrl>().toLocalFile());
+            }
+
+            if(!pix.isNull()){
+                coverPlaceholder_->setPixmap(pix.scaled(220, 220, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            }
+            qDebug() << "Cover:" << cover.isValid() << cover.typeName();
+        });
     }
 
 
@@ -129,10 +164,6 @@ MainWindow::MainWindow(QWidget* parent)
         };
 
         MediaPlayer->setSource(QUrl::fromLocalFile(file));
-        QFileInfo info(file);
-        QString name = info.baseName();
-        trackTitle_->setText(name);
-        songInfo_->setText(name);
         MediaPlayer->play();
     }
 

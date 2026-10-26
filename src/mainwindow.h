@@ -37,4 +37,5 @@ private:
     QSlider* progressBar_;
     QLabel* rTime_;
     QLabel* tTime_;
+    QLabel* coverPlaceholder_;
 };
