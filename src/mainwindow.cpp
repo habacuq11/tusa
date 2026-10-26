@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget* parent)
     {
         resize(900,600);//Sets the size of the window
         setWindowTitle("Tusa");//Sets th title of the window
-        MediaPlayer = new QMediaPlayer(this);
-        AudioOutput = new QAudioOutput(this);
+        MediaPlayer = new QMediaPlayer(this);//creates the player
+        AudioOutput = new QAudioOutput(this);//creates the audio output
         auto* container = new QWidget(this);//Creates a container for the window
         auto* exteriorLayout = new QVBoxLayout;//Creates a vertical layout for the container
         auto* mainlayout = new QHBoxLayout;//Creates a horizontal layout for the content or something like that lol idk how to explain
@@ -100,7 +100,7 @@ MainWindow::MainWindow(QWidget* parent)
         playerHLayout->addWidget(songInfo_);//Adds the song info to the main layout of the player bar
         playerHLayout->addStretch();//adds flexible space 
         playerHLayout->addWidget(reproductionZone);//Adds the button container to the playerbar layout
-        playerHLayout->addStretch();
+        playerHLayout->addStretch();//adds flexible space
         reproductionLayout->addWidget(backButton_);//Adds the back button to the button container
         reproductionLayout->addWidget(playButton_);//Adds the button to the button container
         reproductionLayout->addWidget(nextButton_);//Adds the button to the button container
@@ -113,11 +113,11 @@ MainWindow::MainWindow(QWidget* parent)
         rTime_->setObjectName("playbackTime");//sets the ON of the reproduction time
         volume_->setObjectName("volumeLabel");//sets the ON of the volume info
         volumeSlider_->setObjectName("volumeSlider");//sets the ON of the volume slider
-        volumeChanged(volumeSlider_->value());
-        connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);
-        connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::volumeChanged);
-        connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);
-        connect(MediaPlayer, &QMediaPlayer::positionChanged, this, MainWindow::posChanged);
+        volumeChanged(volumeSlider_->value());//sets the current value of the volume slider
+        connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);//conncets the select button with the open file function
+        connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::volumeChanged);//connects the volume slider with th function that allows to change the audio output volume
+        connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);//connects the play button with the play/pause function
+        connect(MediaPlayer, &QMediaPlayer::positionChanged, this, MainWindow::posChanged);//connects the state of the media player with the function that allows to change the slider position and transcurred time label
         connect(MediaPlayer, &QMediaPlayer::durationChanged, this, MainWindow::durChanged);
         connect(progressBar_, &QSlider::sliderMoved, this, MainWindow::progressMoved);
         connect(MediaPlayer, &QMediaPlayer::metaDataChanged, this, [this](){
