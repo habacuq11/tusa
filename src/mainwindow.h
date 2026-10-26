@@ -19,6 +19,9 @@ private slots:
     void openFile();
     void ppState();
     void volumeChanged(int value);
+    void posChanged(qint64 pos);
+    void durChanged(qint64 dur);
+    void progressMoved(int value);
 
 private:
     QMediaPlayer* MediaPlayer;
@@ -31,4 +34,7 @@ private:
     QPushButton* nextButton_;
     QSlider* volumeSlider_;
     QLabel* volume_;
+    QSlider* progressBar_;
+    QLabel* rTime_;
+    QLabel* tTime_;
 };

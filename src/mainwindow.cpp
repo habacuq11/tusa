@@ -78,24 +78,24 @@ MainWindow::MainWindow(QWidget* parent)
         backButton_ = new QPushButton("|<");//Creates the back button
         playButton_ = new QPushButton(">");//Creates the play button
         nextButton_ = new QPushButton(">|");//Creates the next button
-        auto* rTime = new QLabel("0:00");//Creates a label for the reproduction time
-        auto* tTime = new QLabel("0:00");//Creates a label for the transcurred time
+        rTime_ = new QLabel("0:00");//Creates a label for the reproduction time
+        tTime_ = new QLabel("0:00");//Creates a label for the transcurred time
         volume_ = new QLabel("Volume");//A label for the volume info
         volumeSlider_ = new QSlider(Qt::Horizontal);//Creates a horizontal slider to set the volume
         volumeSlider_->setRange(0, 100);//Sets the slider range
         volumeSlider_->setValue(70);//Sets the slider to a inittial value of 70
-        auto* progressBar = new QSlider(Qt::Horizontal);//Creates another horizontal slider for the song progress
-        progressBar->setObjectName("progressBar");//set the slider ON
-        progressBar->setRange(0, 1000);//Set the slider range
-        progressBar->setValue(0);//Sets the inittial value of the slider to 0
+        progressBar_ = new QSlider(Qt::Horizontal);//Creates another horizontal slider for the song progress
+        progressBar_->setObjectName("progressBar");//set the slider ON
+        progressBar_->setRange(0, 1000);//Set the slider range
+        progressBar_->setValue(0);//Sets the inittial value of the slider to 0
         auto* reproductionZone = new QWidget;//Creates a new container for the control buttons 
         reproductionZone->setObjectName("reproductionZone");//Set the ON for the coontainer
         auto* reproductionLayout = new QHBoxLayout(reproductionZone);//Creates a horizontal layout for the button container
         playerVLayout->addWidget(progressContainer);//Adds the progress container at the top
         playerVLayout->addWidget(controlIContainer);//Adds the control i container at the bottom
-        progressLayout->addWidget(tTime);//Adds the transcurred time
-        progressLayout->addWidget(progressBar);//Adds the progress bar to the progress layout
-        progressLayout->addWidget(rTime);//Adds the total reproduction time
+        progressLayout->addWidget(tTime_);//Adds the transcurred time
+        progressLayout->addWidget(progressBar_);//Adds the progress bar to the progress layout
+        progressLayout->addWidget(rTime_);//Adds the total reproduction time
         playerHLayout->addWidget(songInfo_);//Adds the song info to the main layout of the player bar
         playerHLayout->addStretch();//adds flexible space 
         playerHLayout->addWidget(reproductionZone);//Adds the button container to the playerbar layout
@@ -108,13 +108,16 @@ MainWindow::MainWindow(QWidget* parent)
         backButton_->setObjectName("backButton");//sets ON of the backbutton
         playButton_->setObjectName("playButton");//sets the ON of the play Button
         nextButton_->setObjectName("nextButton"); //sets the ON of the next button
-        rTime->setObjectName("playbackTime");//sets the ON of the reproduction time
+        rTime_->setObjectName("playbackTime");//sets the ON of the reproduction time
         volume_->setObjectName("volumeLabel");//sets the ON of the volume info
         volumeSlider_->setObjectName("volumeSlider");//sets the ON of the volume slider
         volumeChanged(volumeSlider_->value());
         connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);
         connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::volumeChanged);
         connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);
+        connect(MediaPlayer, &QMediaPlayer::positionChanged, this, MainWindow::posChanged);
+        connect(MediaPlayer, &QMediaPlayer::durationChanged, this, MainWindow::durChanged);
+        connect(progressBar_, &QSlider::sliderMoved, this, MainWindow::progressMoved);
     }
 
 
@@ -146,5 +149,28 @@ MainWindow::MainWindow(QWidget* parent)
     void MainWindow::volumeChanged(int value){
         AudioOutput->setVolume(value / 100.0);
         volume_->setText(QString("Vol: %1%").arg(value));
+    }
+
+    static QString formatTime(qint64 ms){
+        qint64 totalSecs = ms / 1000;
+        qint64 mins = totalSecs / 60;
+        qint64 secs = totalSecs % 60;
+        return QString("%1:%2").arg(mins).arg(secs, 2, 10, QChar('0'));
+    }
+
+    void MainWindow::posChanged(qint64 pos){
+        if(!progressBar_->isSliderDown()){
+            progressBar_->setValue(static_cast<int>(pos));
+        }
+        tTime_->setText(formatTime(pos));
+    }
+
+    void MainWindow::durChanged(qint64 dur){
+        progressBar_->setRange(0, static_cast<int>(dur));
+        rTime_->setText(formatTime(dur));
+    }
+
+    void MainWindow::progressMoved(int value){
+        MediaPlayer->setPosition(value);
     }
 MainWindow::~MainWindow() = default;// the destructor lol
