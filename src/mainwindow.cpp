@@ -16,7 +16,6 @@
 #include <QFileDialog>
 #include <QUrl>
 #include <QMediaMetaData>
-#include <QPixmap>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -117,8 +116,9 @@ MainWindow::MainWindow(QWidget* parent)
         connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);//conncets the select button with the open file function
         connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::volumeChanged);//connects the volume slider with th function that allows to change the audio output volume
         connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);//connects the play button with the play/pause function
+        connect(backButton_, &QPushButton::clicked, this, MainWindow::resetSong);
         connect(MediaPlayer, &QMediaPlayer::positionChanged, this, MainWindow::posChanged);//connects the state of the media player with the function that allows to change the slider position and transcurred time label
-        connect(MediaPlayer, &QMediaPlayer::durationChanged, this, MainWindow::durChanged);
+        connect(MediaPlayer, &QMediaPlayer::durationChanged, this, MainWindow::durChanged);// 
         connect(progressBar_, &QSlider::sliderMoved, this, MainWindow::progressMoved);
         connect(MediaPlayer, &QMediaPlayer::metaDataChanged, this, [this](){
             QMediaMetaData meta = MediaPlayer->metaData();
@@ -126,8 +126,6 @@ MainWindow::MainWindow(QWidget* parent)
             QString title = meta.value(QMediaMetaData::Title).toString();
             QString album = meta.value(QMediaMetaData::AlbumTitle).toString();
             QString artist = meta.value(QMediaMetaData::ContributingArtist).toString();
-            QVariant cover = meta.value(QMediaMetaData::CoverArtImage);
-
             if(!title.isEmpty()){
                 trackTitle_->setText(title);
                 songInfo_->setText(title);
@@ -137,21 +135,6 @@ MainWindow::MainWindow(QWidget* parent)
                 trackMetadata_->setText(QString("%1 - %2").arg(artist, album));
             }
 
-            QPixmap pix;
-            if(cover.canConvert<QImage>()){
-                pix = QPixmap::fromImage(cover.value<QImage>());
-            }else if(cover.canConvert<QPixmap>()){
-                pix = cover.value<QPixmap>();
-            }else if(cover.canConvert<QByteArray>()){
-                pix.loadFromData(cover.value<QByteArray>());
-            }else if(cover.canConvert<QUrl>()){
-                pix.load(cover.value<QUrl>().toLocalFile());
-            }
-
-            if(!pix.isNull()){
-                coverPlaceholder_->setPixmap(pix.scaled(220, 220, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            }
-            qDebug() << "Cover:" << cover.isValid() << cover.typeName();
         });
     }
 
@@ -165,6 +148,7 @@ MainWindow::MainWindow(QWidget* parent)
 
         MediaPlayer->setSource(QUrl::fromLocalFile(file));
         MediaPlayer->play();
+        playButton_->setText("||");
     }
 
     void MainWindow::ppState(){
@@ -204,4 +188,12 @@ MainWindow::MainWindow(QWidget* parent)
     void MainWindow::progressMoved(int value){
         MediaPlayer->setPosition(value);
     }
+
+    void MainWindow::resetSong(){
+        if(MediaPlayer->playbackState()==QMediaPlayer::PlayingState){
+            MediaPlayer->stop();
+            MediaPlayer->play();
+        }
+    }
+
 MainWindow::~MainWindow() = default;// the destructor lol

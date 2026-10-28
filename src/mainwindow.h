@@ -22,6 +22,7 @@ private slots:
     void posChanged(qint64 pos);
     void durChanged(qint64 dur);
     void progressMoved(int value);
+    void resetSong();
 
 private:
     QMediaPlayer* MediaPlayer;
