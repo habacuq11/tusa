@@ -116,10 +116,10 @@ MainWindow::MainWindow(QWidget* parent)
         connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);//conncets the select button with the open file function
         connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::volumeChanged);//connects the volume slider with th function that allows to change the audio output volume
         connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);//connects the play button with the play/pause function
-        connect(backButton_, &QPushButton::clicked, this, MainWindow::resetSong);
-        connect(MediaPlayer, &QMediaPlayer::positionChanged, this, MainWindow::posChanged);//connects the state of the media player with the function that allows to change the slider position and transcurred time label
-        connect(MediaPlayer, &QMediaPlayer::durationChanged, this, MainWindow::durChanged);// 
-        connect(progressBar_, &QSlider::sliderMoved, this, MainWindow::progressMoved);
+        connect(backButton_, &QPushButton::clicked, this, &MainWindow::resetSong);
+        connect(MediaPlayer, &QMediaPlayer::positionChanged, this, &MainWindow::posChanged);//connects the state of the media player with the function that allows to change the slider position and transcurred time label
+        connect(MediaPlayer, &QMediaPlayer::durationChanged, this, &MainWindow::durChanged);// 
+        connect(progressBar_, &QSlider::sliderMoved, this, &MainWindow::progressMoved);
         connect(MediaPlayer, &QMediaPlayer::metaDataChanged, this, [this](){
             QMediaMetaData meta = MediaPlayer->metaData();
 
@@ -190,10 +190,7 @@ MainWindow::MainWindow(QWidget* parent)
     }
 
     void MainWindow::resetSong(){
-        if(MediaPlayer->playbackState()==QMediaPlayer::PlayingState){
-            MediaPlayer->stop();
-            MediaPlayer->play();
-        }
+        MediaPlayer->setPosition(0);
     }
 
 MainWindow::~MainWindow() = default;// the destructor lol
