@@ -7,7 +7,8 @@ I'm also trying to make it support a lot of formats.
 This is meant to be a 2000's looking music player.
 This was entirely made on VSCode by hand.
 
-THIS IS STILL IN DEVELOPMENT SO PLEASE BE KIND 😊<img width="1366" height="768" alt="70936" src="https://github.com/user-attachments/assets/98447834-8cd9-43dd-95e2-c01f035c65c8" />
+THIS IS STILL IN DEVELOPMENT SO PLEASE BE KIND 😊<br>
+<img width="1366" height="768" alt="72828" src="https://github.com/user-attachments/assets/28f6a6fe-07c6-4781-8a75-d72ad80e08fb" />
 
 How to run:<br>
 1.Go to releases<br>
