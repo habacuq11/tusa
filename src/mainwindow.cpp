@@ -145,9 +145,13 @@ MainWindow::MainWindow(QWidget* parent)
         if(file.isEmpty()){
             return;
         };
-
         MediaPlayer->setSource(QUrl::fromLocalFile(file));
         MediaPlayer->play();
+        QFileInfo info(file);
+        QString name = info.baseName();
+        trackTitle_->setText(name);
+        songInfo_->setText(name);
+        trackMetadata_->setText("Unknown artist");
         playButton_->setText("||");
     }
 
@@ -155,7 +159,7 @@ MainWindow::MainWindow(QWidget* parent)
         if(MediaPlayer->playbackState()==QMediaPlayer::PlayingState){
             MediaPlayer->pause();
             playButton_->setText(">");
-        }else{
+        }else if(MediaPlayer->hasAudio()){
             MediaPlayer->play();
             playButton_->setText("||");
         }
