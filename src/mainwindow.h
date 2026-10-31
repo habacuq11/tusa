@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QStringList>
 
 class QMediaPlayer;
 class QAudioOutput;
@@ -22,7 +23,8 @@ private slots:
     void posChanged(qint64 pos);
     void durChanged(qint64 dur);
     void progressMoved(int value);
-    void resetSong();
+    void backSong();
+    void playSong(int index);
 
 private:
     QMediaPlayer* MediaPlayer;
@@ -39,4 +41,6 @@ private:
     QLabel* rTime_;
     QLabel* tTime_;
     QLabel* coverPlaceholder_;
+    QStringList playlist_;
+    int actualIndex = -1;
 };

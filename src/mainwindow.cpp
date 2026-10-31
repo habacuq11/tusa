@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget* parent)
         connect(selectSong, &QPushButton::clicked, this, MainWindow::openFile);//conncets the select button with the open file function
         connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::volumeChanged);//connects the volume slider with th function that allows to change the audio output volume
         connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);//connects the play button with the play/pause function
-        connect(backButton_, &QPushButton::clicked, this, &MainWindow::resetSong);
+        connect(backButton_, &QPushButton::clicked, this, &MainWindow::backSong);
         connect(MediaPlayer, &QMediaPlayer::positionChanged, this, &MainWindow::posChanged);//connects the state of the media player with the function that allows to change the slider position and transcurred time label
         connect(MediaPlayer, &QMediaPlayer::durationChanged, this, &MainWindow::durChanged);// 
         connect(progressBar_, &QSlider::sliderMoved, this, &MainWindow::progressMoved);
@@ -147,12 +147,31 @@ MainWindow::MainWindow(QWidget* parent)
         };
         MediaPlayer->setSource(QUrl::fromLocalFile(file));
         MediaPlayer->play();
+
+        if(!playlist_.contains(file)){
+            playlist_.append(file);
+            actualIndex = playlist_.size() - 1;
+        }else{
+            actualIndex =playlist_.indexOf(file);   
+        }
+
+        playSong(actualIndex);
+    }
+
+    void MainWindow::playSong(int index){
+        if(index < 0 || index >= playlist_.size()){
+            return;}
+        actualIndex = index;
+        const QString& file = playlist_.at(index);
+        MediaPlayer->setSource(QUrl::fromLocalFile(file));
+        MediaPlayer->play();
         QFileInfo info(file);
         QString name = info.baseName();
         trackTitle_->setText(name);
         songInfo_->setText(name);
         trackMetadata_->setText("Unknown artist");
         playButton_->setText("||");
+        
     }
 
     void MainWindow::ppState(){
@@ -193,7 +212,7 @@ MainWindow::MainWindow(QWidget* parent)
         MediaPlayer->setPosition(value);
     }
 
-    void MainWindow::resetSong(){
+    void MainWindow::backSong(){
         MediaPlayer->setPosition(0);
     }
 
