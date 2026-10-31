@@ -1,17 +1,48 @@
-This is a music player write in c++ with Qt
+# tusa
 
-The main purpose of this was make it as light as it's possible
-cause the Spotify Launcher consume a lot of resources and my laptop 
-is a potato, also I want to make it easy to use, simple and fast, so I write it entirely on c++ with Qt, so it can run natively; by the time I upload this, it consume around 6MB of RAM.
-I'm also trying to make it support a lot of formats.
-This is meant to be a 2000's looking music player.
-This was entirely made on VSCode by hand.
+**A lightweight music player with a classic 2000s look.**
 
-THIS IS STILL IN DEVELOPMENT SO PLEASE BE KIND 😊<br>
-<img width="1366" height="768" alt="72828" src="https://github.com/user-attachments/assets/28f6a6fe-07c6-4781-8a75-d72ad80e08fb" />
+`tusa` is a native desktop music player built with C++ and Qt. It aims to stay
+simple, fast, and easy to use, especially on computers with limited resources.
+At the time of the initial release, it used around 6 MB of RAM; actual usage
+may vary by system and while playing music.
 
-How to run:<br>
-1.Go to releases<br>
-2.Download "tusa v0.1.0.zip"<br>
-3.Unzip it<br>
-4.Run "tusa.exe"<br>
+> **Status:** This project is still in development. Support for additional
+> audio formats is a work in progress.
+
+## Screenshot
+
+![tusa music player](https://github.com/user-attachments/assets/28f6a6fe-07c6-4781-8a75-d72ad80e08fb)
+
+## Download and run
+
+1. Open the [Releases](https://github.com/habacuq11/tusa/releases) page.
+2. Download the latest release.
+3. Extract the archive.
+4. Run `tusa.exe`.
+
+## Build from source
+
+### Requirements
+
+- C++17-compatible compiler
+- CMake 3.16 or later
+- Qt 6 with the Widgets and Multimedia modules
+
+### Build
+
+From the project directory, configure and build with CMake:
+
+```powershell
+cmake -S . -B build
+cmake --build build --config Release
+```
+
+The executable will be generated in the build directory (the exact path depends
+on your generator and configuration).
+
+## Technology
+
+- C++17
+- Qt 6 Widgets
+- Qt 6 Multimedia
