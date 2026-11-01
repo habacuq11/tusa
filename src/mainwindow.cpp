@@ -121,6 +121,7 @@ MainWindow::MainWindow(QWidget* parent)
         connect(MediaPlayer, &QMediaPlayer::positionChanged, this, &MainWindow::posChanged);//connects the state of the media player with the function that allows to change the slider position and transcurred time label
         connect(MediaPlayer, &QMediaPlayer::durationChanged, this, &MainWindow::durChanged);// 
         connect(progressBar_, &QSlider::sliderMoved, this, &MainWindow::progressMoved);
+        connect(MediaPlayer, &QMediaPlayer::playbackStateChanged, this, MainWindow::buttonText);
         connect(MediaPlayer, &QMediaPlayer::metaDataChanged, this, [this](){
             QMediaMetaData meta = MediaPlayer->metaData();
 
@@ -148,7 +149,6 @@ MainWindow::MainWindow(QWidget* parent)
             return;
         };
         MediaPlayer->setSource(QUrl::fromLocalFile(file));
-        MediaPlayer->play();
 
         if(!playlist_.contains(file)){
             playlist_.append(file);
@@ -179,10 +179,8 @@ MainWindow::MainWindow(QWidget* parent)
     void MainWindow::ppState(){
         if(MediaPlayer->playbackState()==QMediaPlayer::PlayingState){
             MediaPlayer->pause();
-            playButton_->setText(">");
         }else if(MediaPlayer->hasAudio()){
             MediaPlayer->play();
-            playButton_->setText("||");
         }
     }
 
@@ -241,8 +239,18 @@ MainWindow::MainWindow(QWidget* parent)
     }
 
     void MainWindow::songEnded(QMediaPlayer::MediaStatus status){
-        if(status == QMediaPlayer::EndOfMedia){
+        if(status == QMediaPlayer::EndOfMedia && playlist_.size() > 1){
             nextSong();
+        }else{
+            return;
+        }
+    }
+
+    void MainWindow::buttonText(QMediaPlayer::PlaybackState state){
+        if(!MediaPlayer->isPlaying()){
+            playButton_->setText(">");
+        }else{
+            playButton_->setText("||");
         }
     }
 

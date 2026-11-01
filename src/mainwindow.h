@@ -28,6 +28,7 @@ private slots:
     void playSong(int index);
     void nextSong();
     void songEnded(QMediaPlayer::MediaStatus status);
+    void buttonText(QMediaPlayer::PlaybackState state);
 
 private:
     QMediaPlayer* MediaPlayer;
