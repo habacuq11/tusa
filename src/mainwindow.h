@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <QStringList>
+#include <QMediaPlayer>
 
 class QMediaPlayer;
 class QAudioOutput;
@@ -25,6 +26,8 @@ private slots:
     void progressMoved(int value);
     void backSong();
     void playSong(int index);
+    void nextSong();
+    void songEnded(QMediaPlayer::MediaStatus status);
 
 private:
     QMediaPlayer* MediaPlayer;

@@ -117,6 +117,7 @@ MainWindow::MainWindow(QWidget* parent)
         connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::volumeChanged);//connects the volume slider with th function that allows to change the audio output volume
         connect(playButton_, &QPushButton::clicked, this, &MainWindow::ppState);//connects the play button with the play/pause function
         connect(backButton_, &QPushButton::clicked, this, &MainWindow::backSong);
+        connect(nextButton_, &QPushButton::clicked, this, &MainWindow::nextSong);
         connect(MediaPlayer, &QMediaPlayer::positionChanged, this, &MainWindow::posChanged);//connects the state of the media player with the function that allows to change the slider position and transcurred time label
         connect(MediaPlayer, &QMediaPlayer::durationChanged, this, &MainWindow::durChanged);// 
         connect(progressBar_, &QSlider::sliderMoved, this, &MainWindow::progressMoved);
@@ -136,6 +137,7 @@ MainWindow::MainWindow(QWidget* parent)
             }
 
         });
+        connect(MediaPlayer, &QMediaPlayer::mediaStatusChanged, this, MainWindow::songEnded);
     }
 
 
@@ -213,7 +215,35 @@ MainWindow::MainWindow(QWidget* parent)
     }
 
     void MainWindow::backSong(){
-        MediaPlayer->setPosition(0);
+        if(playlist_.isEmpty()){
+            return;
+        }
+        int previous = actualIndex - 1;
+        if(previous < 0){
+            previous = playlist_.size() - 1;
+        }
+        if(MediaPlayer->position() >= 5000){
+            MediaPlayer->setPosition(0);
+        }else{
+            playSong(previous);
+        }
+    }
+
+    void MainWindow::nextSong(){
+        if(playlist_.isEmpty()){
+            return;
+        }
+        int next = actualIndex + 1;
+        if(next >= playlist_.size()){
+            next = 0;
+        }
+        playSong(next);
+    }
+
+    void MainWindow::songEnded(QMediaPlayer::MediaStatus status){
+        if(status == QMediaPlayer::EndOfMedia){
+            nextSong();
+        }
     }
 
 MainWindow::~MainWindow() = default;// the destructor lol
